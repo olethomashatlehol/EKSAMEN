@@ -40,6 +40,7 @@ void EksamensApp::createScene(void)
     mAnimationState->setEnabled(true);
 
 
+    player = new Player("player",mSceneMgr);
     // Create the enemy
     Ogre::Entity* mEntEnemy = mSceneMgr->createEntity("Enemy", "ogrehead.mesh");
     mEnemyNode = mSceneMgr->getRootSceneNode()->

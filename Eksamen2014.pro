@@ -21,7 +21,7 @@ win32 {
 }
 
 debug {
-     TARGET = $$join(TARGET,,,d)
+    TARGET = $$join(TARGET,,,d)
     LIBS *= -lOgreMain_d -lOIS_d -lOgreOverlay_d
 }
 release {
@@ -30,9 +30,11 @@ release {
 
 SOURCES += \
     src/EksamensApp.cpp \
-    src/OgreFramework.cpp
+    src/OgreFramework.cpp \
+    src/player.cpp
 
 HEADERS += \
     include/EksamensApp.h \
-    include/OgreFramework.h
+    include/OgreFramework.h \
+    include /player.h\
     include/ExempleApplication.h

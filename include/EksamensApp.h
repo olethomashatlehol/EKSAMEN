@@ -2,6 +2,7 @@
 #define __EksamensApp_h_
 
 #include "OgreFramework.h"
+#include "player.h"
 
 class EksamensApp : public OgreFramework
 {
@@ -32,6 +33,16 @@ protected:
     Ogre::SceneNode* mPickupNode3;
     Ogre::SceneNode* mPickupNode4;
     int mPickups;
+////////////////////////////////////////////////////////////////////
+
+  //NEW
+    Player *player;
+
+
+
+
+
+    ////////////////////////////////////////////
 
     Ogre::AnimationState *mAnimationState;
 
