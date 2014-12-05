@@ -33,7 +33,8 @@ SOURCES += \
     src/OgreFramework.cpp \
     src/player.cpp \
     src/Main.cpp \
-    src/enemy.cpp
+    src/enemy.cpp \
+    src/camera.cpp
 
 
 
@@ -42,6 +43,7 @@ HEADERS += \
     include/OgreFramework.h \
     include/ExempleApplication.h \
     include/player.h \
-    include/enemy.h
+    include/enemy.h \
+    include/camera.h
 
 

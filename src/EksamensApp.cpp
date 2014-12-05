@@ -3,10 +3,6 @@
 //-------------------------------------------------------------------------------------
 EksamensApp::EksamensApp(void)
 {
-    forward = false;
-    backwards = false;
-    left = false;
-    right = false;
     mPickups = 0;
 }
 //-------------------------------------------------------------------------------------
@@ -25,18 +21,15 @@ void EksamensApp::createScene(void)
 
     //Skybox
     mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox", 500, false);
- 
+
     // Create the player
     player = new Player("player",mSceneMgr);
 
     // Create the enemy
     enemy = new Enemy("enemy", mSceneMgr);
-    Ogre::Entity* mEntEnemy = mSceneMgr->createEntity("Enemy", "ogrehead.mesh");
-    mEnemyNode = mSceneMgr->getRootSceneNode()->
-            createChildSceneNode("RobotNode", Ogre::Vector3(0.0f, 2.0f, 0.0f));
-    mEnemyNode->attachObject(mEntEnemy);
-    mEnemyNode->scale(0.1f, 0.1f, 0.1f);
 
+    //Create 3rd person camera
+    camera = new Camera ("Extended Camera", mSceneMgr, mCamera);
     // Create the goal
     Ogre::Entity* mEntGoal = mSceneMgr->createEntity("Goal", "athene.mesh");
     mGoalNode = mSceneMgr->getRootSceneNode()->
@@ -62,17 +55,7 @@ void EksamensApp::createScene(void)
     entGround->setCastShadows(false);
     groundNode->setPosition(0.0, -0.0, 0.0);
 
-    // Create the enemy walking list
-    mWalkList.push_back(Ogre::Vector3(18.0f,   2.0f,  18.0f ));
-    mWalkList.push_back(Ogre::Vector3(9.0f,   2.0f,  9.0f ));
-    mWalkList.push_back(Ogre::Vector3(-18.0f,  2.0f, 18.0f));
-    mWalkList.push_back(Ogre::Vector3(-9.0f,   2.0f,  9.0f ));
-    mWalkList.push_back(Ogre::Vector3(0.0f,  2.0f, 0.0f));
-    mWalkList.push_back(Ogre::Vector3(18.0f,  2.0f, -18.0f));
-    mWalkList.push_back(Ogre::Vector3(9.0f,   2.0f,  -9.0f ));
-    mWalkList.push_back(Ogre::Vector3(-18.0f,  2.0f, -18.0f));
-    mWalkList.push_back(Ogre::Vector3(-9.0f,   2.0f,  -9.0f ));
-    mListIterator = 0;
+
 
     // Create pickups:
     Ogre::Entity* entPickup = mSceneMgr->createEntity("PickupEntity1", "Barrel.mesh");
@@ -101,15 +84,7 @@ void EksamensApp::createScene(void)
 
 }
 
-bool EksamensApp::nextLocation(){
-    if (mWalkList.empty()) return false;
-    mDestination = mWalkList[mListIterator];  // this gets a position from the list
-    mDirection = mDestination - mEnemyNode->getPosition();
-    mDistance = mDirection.normalise();
-    mListIterator = rand()% mWalkList.size();
 
-    return true;
-}
 
 bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
 {
@@ -136,10 +111,9 @@ bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
         break;
     case OIS::KC_RETURN:
         //reset penguin
-        if (mEnemyWalkSpeed == 0 && mPickups != 10)
+        if (enemy->mEnemyWalkSpeed == 0 && mPickups != 10)
         {
-            mEnemyWalkSpeed = 45;
-            mPlayerWalkSpeed = 25;
+            enemy->mEnemyWalkSpeed = 45;
             player->setPlayerPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
             mSceneMgr->setAmbientLight(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
         }
@@ -184,73 +158,13 @@ bool EksamensApp::mouseMoved(const OIS::MouseEvent &arg)
     return true;
 }
 
-void EksamensApp::createFrameListener(void){
-    OgreFramework::createFrameListener();
-    mEnemyWalkSpeed = 45.0f;
-    mPlayerWalkSpeed = 20.0f;
-    mDirection = Ogre::Vector3::ZERO;
-}
-
-void EksamensApp::createCamera(void)
+void EksamensApp::checkCollisions()
 {
-    // create the camera
-    mCamera = mSceneMgr->createCamera("PlayerCam");
-    // set its position, direction
-    mCamera->setPosition(Ogre::Vector3(0,20,60));
-    mCamera->lookAt(Ogre::Vector3(0,6,0));
-    // set the near clip distance
-    mCamera->setNearClipDistance(5);
-
-    // the rest is set up by default Sdk config
-    mCameraMan = new OgreBites::SdkCameraMan(mCamera);   // create a default camera controller
-}
-
-bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
-
-    //update player
-
-
-    player->Update(evt);
-    //update enemy
-    if (mDirection == Ogre::Vector3::ZERO) {
-        nextLocation();
-    }else{
-        Ogre::Real enemyMove = mEnemyWalkSpeed * evt.timeSinceLastFrame;
-        mDistance -= enemyMove;
-        if (mDistance <= 0.0f){
-            mEnemyNode->setPosition(mDestination);
-            mDirection = Ogre::Vector3::ZERO;
-            if (nextLocation()){
-                // Correct Rotation Code will go here later
-                Ogre::Vector3 src = mEnemyNode->getOrientation() * Ogre::Vector3::UNIT_X;
-                if ((1.0f + src.dotProduct(mDirection)) < 0.0001f) {
-                    mEnemyNode->yaw(Ogre::Degree(180));
-                }else{
-                    Ogre::Quaternion quat = src.getRotationTo(mDirection);
-                    mEnemyNode->rotate(quat);
-                } // else
-            }//if
-        }else{
-            mEnemyNode->translate(mDirection * enemyMove);
-        } // else
-    } // else
-
-
-    //Move player
-
-
-    //update camera
-    mCamera->lookAt(player->getPlayerPosition());
-
-
-    //Collisions
-/*
-    //fall down
     if (player->getPlayerPosition().z < -25){
-        player->playernode->translate(0.0, -2.0 * playerMove, 0.0);
+        player->playernode->translate(0.0, -2.0 * player->playermove, 0.0);
     }
     if (player->getPlayerPosition().z > 25) {
-        player->playernode->translate(0.0, -2.0 * playerMove, 0.0);
+        player->playernode->translate(0.0, -2.0 * player->playermove, 0.0);
     }
     if (player->getPlayerPosition().y < -30) {
         //Could take damage or reset game or something here...
@@ -258,7 +172,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
     }
 
     //Pickups
-    if(mSceneMgr->getEntity("Head")->
+    if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("PickupEntity1")->getWorldBoundingBox()))
     {
         if (mSceneMgr->getEntity("PickupEntity1")->isVisible())
@@ -267,7 +181,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
             mPickups ++;
         }
     }
-    if(mSceneMgr->getEntity("Head")->
+    if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("PickupEntity2")->getWorldBoundingBox()))
     {
         if (mSceneMgr->getEntity("PickupEntity2")->isVisible())
@@ -276,7 +190,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
             mPickups ++;
         }
     }
-    if(mSceneMgr->getEntity("Head")->
+    if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("PickupEntity3")->getWorldBoundingBox()))
     {
         if (mSceneMgr->getEntity("PickupEntity3")->isVisible())
@@ -285,7 +199,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
             mPickups ++;
         }
     }
-    if(mSceneMgr->getEntity("Head")->
+    if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("PickupEntity4")->getWorldBoundingBox()))
     {
         if (mSceneMgr->getEntity("PickupEntity4")->isVisible())
@@ -296,29 +210,65 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
     }
 
     //Goal
-    if(mSceneMgr->getEntity("Head")->
+    if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("Goal")->getWorldBoundingBox()))
     {
-        if (mPickups == 4 && mPlayerWalkSpeed != 0)
+        if (mPickups == 4 && player->mPlayerWalkSpeed != 0)
         {
-            mPlayerWalkSpeed = 0;
-            mEnemyWalkSpeed = 0;
+            player->mPlayerWalkSpeed = 0;
+            enemy->mEnemyWalkSpeed = 0;
             mPickups = 10; //no reset
         }
     }
 
     //Enemy
-    if(mSceneMgr->getEntity("Head")->
-            getWorldBoundingBox().intersects(mSceneMgr->getEntity("Enemy")->getWorldBoundingBox()))
+    if(player->getEntity()->
+            getWorldBoundingBox().intersects(enemy->getEntity()->getWorldBoundingBox()))
     {
         //mSceneMgr->setAmbientLight(Ogre::ColourValue(0.9f, 0.1f, 0.1f));
-        mPlayerWalkSpeed = 0;
-        mEnemyWalkSpeed = 0;
+        player->mPlayerWalkSpeed = 0;
+        enemy->mEnemyWalkSpeed = 0;
     }
 
 
 }
-*/
+
+
+
+void EksamensApp::createFrameListener(void){
+    OgreFramework::createFrameListener();
+
+}
+
+void EksamensApp::createCamera(void)
+{
+    // create the camera
+    mCamera = mSceneMgr->createCamera("PlayerCam");
+
+}
+
+bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
+
+    //update player
+
+
+    player->Update(evt);
+    //update enemy
+    enemy->update(evt);
+
+    //update camera
+    camera->update(evt, player->getPlayerPosition());
+    //Move player
+
+
+    //update camera
+    //mCamera->lookAt(player->getPlayerPosition());
+
+
+    //Collisions
+    checkCollisions();
+    //fall down
+
 
 /*
  *

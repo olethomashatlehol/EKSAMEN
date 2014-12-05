@@ -4,29 +4,22 @@
 #include "OgreFramework.h"
 #include "player.h"
 #include "enemy.h"
+#include "camera.h"
 class EksamensApp : public OgreFramework
 {
 public:
     EksamensApp(void);
-    virtual ~EksamensApp(void);
+    ~EksamensApp(void);
 
     void createCamera();
 protected:
-    virtual void createScene(void);
-    virtual bool nextLocation(void);
-    virtual bool keyPressed( const OIS::KeyEvent &arg );
-    virtual bool keyReleased( const OIS::KeyEvent &arg );
-    virtual bool mouseMoved( const OIS::MouseEvent &arg );
+     void createScene(void);
+     bool keyPressed( const OIS::KeyEvent &arg );
+     bool keyReleased( const OIS::KeyEvent &arg );
+     bool mouseMoved( const OIS::MouseEvent &arg );
 
-    Ogre::Real mDistance;
-    Ogre::Vector3 mDirection;
-    Ogre::Vector3 mDestination;
-    std::deque<Ogre::Vector3> mWalkList;
-    int mListIterator;
-    Ogre::Real mEnemyWalkSpeed;
-    Ogre::Real mPlayerWalkSpeed;
-    Ogre::SceneNode *mEnemyNode;
 
+    void checkCollisions();
     Ogre::SceneNode* mGoalNode;
     Ogre::SceneNode* mPickupNode1;
     Ogre::SceneNode* mPickupNode2;
@@ -38,25 +31,19 @@ protected:
   //NEW
     Player *player;
     Enemy *enemy;
-
-
+    Camera *camera;
 
 
 
     ////////////////////////////////////////////
 
-    Ogre::AnimationState *mAnimationState;
 
     Ogre::ParticleSystem* mWinParticles;
 
     void createFrameListener();
     bool frameRenderingQueued(const Ogre::FrameEvent &evt);
 
-    //walk parameters
-    bool forward;
-    bool backwards;
-    bool left;
-    bool right;
+
 };
 
 #endif // #ifndef __EksamensApp_h_

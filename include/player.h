@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include "Ogre.h"
-#include "OgreFramework.h"
+
 class Player
 {
 public:
@@ -12,12 +12,16 @@ public:
     Ogre::Vector3 getPlayerPosition();
     void Movement();
     void setPlayerPosition(Ogre::Vector3 pos);
+    Ogre::Vector3 getSightNode();
 
     Ogre::SceneNode *playernode;
+    Ogre::SceneNode *sightnode;
     Ogre::Entity *playerent;
     Ogre::SceneManager *mscenemgr;
     Ogre::AnimationState *mAnimationState;
     Ogre::Real playermove;
+    int *mPlayerWalkSpeed;
+    Ogre::Entity *getEntity();
 
     bool backwards = false;
     bool forward = false;
