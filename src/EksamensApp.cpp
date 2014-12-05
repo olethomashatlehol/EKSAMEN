@@ -8,29 +8,30 @@ EksamensApp::EksamensApp(void)
 //-------------------------------------------------------------------------------------
 EksamensApp::~EksamensApp(void)
 {
+
 }
 
 //-------------------------------------------------------------------------------------
 void EksamensApp::createScene(void)
 {
-    // creating the scene here.
+   /// creating the scene here.
 
-	// Set the scene's ambient light
+    /// Set the scene's ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
     mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
 
-    //Skybox
+   ///Skybox
     mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox", 500, false);
 
-    // Create the player
+    /// Create the player
     player = new Player("player",mSceneMgr);
 
-    // Create the enemy
+    /// Create the enemy
     enemy = new Enemy("enemy", mSceneMgr);
 
-    //Create 3rd person camera
+    ///Create 3rd person camera
     camera = new Camera ("Extended Camera", mSceneMgr, mCamera);
-    // Create the goal
+    /// Create the goal
     Ogre::Entity* mEntGoal = mSceneMgr->createEntity("Goal", "athene.mesh");
     mGoalNode = mSceneMgr->getRootSceneNode()->
             createChildSceneNode("GoalNode", Ogre::Vector3(50.0f, 8.0f, 0.0f));
@@ -38,12 +39,12 @@ void EksamensApp::createScene(void)
     mGoalNode->scale(0.1f, 0.1f, 0.1f);
     mGoalNode->rotate(Ogre::Vector3::UNIT_Y, Ogre::Degree(-90));
  
-    // Create a Light and set its position
+    ///Create a Light and set its position
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     light->setPosition(2.0f, 25.0f, 22.0f);
 
 
-    //Create floor
+    ///Create floor
     Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
     Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
                                                   plane, 300, 50, 10, 5, true, 1, 8, 1, Ogre::Vector3::UNIT_Z);
@@ -57,7 +58,7 @@ void EksamensApp::createScene(void)
 
 
 
-    // Create pickups:
+    /// Create pickups:
     Ogre::Entity* entPickup = mSceneMgr->createEntity("PickupEntity1", "Barrel.mesh");
     mPickupNode1 = mSceneMgr->getRootSceneNode()->
             createChildSceneNode("PickupNode1", Ogre::Vector3(20.0f, 3.0f, 20.0f));
@@ -88,6 +89,8 @@ void EksamensApp::createScene(void)
 
 bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
 {
+
+    ///KEY INPUT - Pressed
     switch (arg.key)
     {
     case OIS::KC_ESCAPE:
@@ -126,6 +129,8 @@ bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
 
 bool EksamensApp::keyReleased(const OIS::KeyEvent &arg)
 {
+
+    ///KEY INPUT - released
     switch (arg.key)
     {
     case OIS::KC_UP:
@@ -160,6 +165,7 @@ bool EksamensApp::mouseMoved(const OIS::MouseEvent &arg)
 
 void EksamensApp::checkCollisions()
 {
+    ///CHECKING COLLISIONS HERE
     if (player->getPlayerPosition().z < -25){
         player->playernode->translate(0.0, -2.0 * player->playermove, 0.0);
     }
@@ -167,11 +173,11 @@ void EksamensApp::checkCollisions()
         player->playernode->translate(0.0, -2.0 * player->playermove, 0.0);
     }
     if (player->getPlayerPosition().y < -30) {
-        //Could take damage or reset game or something here...
+       ///Could take damage or reset game or something here...
         player->playernode->setPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
     }
 
-    //Pickups
+    ///Pickups
     if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("PickupEntity1")->getWorldBoundingBox()))
     {
@@ -209,7 +215,7 @@ void EksamensApp::checkCollisions()
         }
     }
 
-    //Goal
+  ///Goal
     if(player->getEntity()->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("Goal")->getWorldBoundingBox()))
     {
@@ -221,7 +227,7 @@ void EksamensApp::checkCollisions()
         }
     }
 
-    //Enemy
+    ///Enemy
     if(player->getEntity()->
             getWorldBoundingBox().intersects(enemy->getEntity()->getWorldBoundingBox()))
     {
@@ -242,40 +248,25 @@ void EksamensApp::createFrameListener(void){
 
 void EksamensApp::createCamera(void)
 {
-    // create the camera
+    /// create the camera
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
 }
 
 bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
 
-    //update player
-
-
+    ///update player
     player->Update(evt);
-    //update enemy
+   ///update enemy
     enemy->update(evt);
-
-    //update camera
+    ///update camera
     camera->update(evt, player->getPlayerPosition());
-    //Move player
 
 
-    //update camera
-    //mCamera->lookAt(player->getPlayerPosition());
-
-
-    //Collisions
+    ///Collisions
     checkCollisions();
-    //fall down
 
 
-/*
- *
- *Just the main function of the program
- *
- *
- */
-       return OgreFramework::frameRenderingQueued(evt);
+  return OgreFramework::frameRenderingQueued(evt);
 }
 

@@ -2,6 +2,8 @@
 
 Camera::Camera(Ogre::String name, Ogre::SceneManager *sceneMgr, Ogre::Camera *camera)
 {
+
+    ///CREATE CAMERA
     mName = name;
     mSceneMgr = sceneMgr;
 
@@ -63,7 +65,7 @@ void Camera::instantUpdate(Ogre::Vector3 cameraPosition, Ogre::Vector3 targetPos
 
 void Camera::update(const Ogre::FrameEvent &evt,Ogre::Vector3 targetpos)
 {
-
+    ///CAMERA UPDATE
     std::cout<<"CAMERA"<<std::endl;
     Ogre::Vector3 campos;
     campos = targetpos + Ogre::Vector3(-35,10,-10);

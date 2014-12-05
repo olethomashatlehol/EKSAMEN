@@ -1,8 +1,10 @@
 
 #include "player.h"
-
+///THE PLAYER CLASS WITH MOVEMENT
 Player::Player(Ogre::String name, Ogre::SceneManager *sceneMgr)
 {
+
+    /// CREATE PLAYER AND PLAYERNODE
     mscenemgr =sceneMgr;
     playerent = mscenemgr->createEntity((name, "penguin.mesh"));
     playerent->setCastShadows(true);
@@ -11,7 +13,7 @@ Player::Player(Ogre::String name, Ogre::SceneManager *sceneMgr)
     playernode->scale(0.2f, 0.2f, 0.2f);
     playernode->rotate(Ogre::Vector3::UNIT_Y, Ogre::Degree(90));
 
-    //sightnode = playernode->createChildSceneNode("sight", Ogre::Vector3(0,0,0));
+
 
     mAnimationState = playerent->getAnimationState("amuse");
     mAnimationState->setLoop(true);
@@ -31,6 +33,7 @@ Ogre::Vector3 Player::getPlayerPosition()
 
 void Player::Movement()
 {
+    /// THIS IS WHERE THE MOVEMENT HAPPENS
     if(forward){
         playernode->translate(1.0 * playermove, 0.0, 0);
     }
@@ -47,6 +50,7 @@ void Player::Movement()
 
 void Player::setPlayerPosition(Ogre::Vector3 pos)
 {
+    ///SETPLAYERPOS
     playernode->setPosition(pos);
 }
 
@@ -57,11 +61,13 @@ Ogre::Vector3 Player::getSightNode()
 
 Ogre::Entity *Player::getEntity()
 {
+    ///GET ENTITY FROM HERE, COLLISIONS ETC.
     return playerent;
 }
 
 void Player::Update(const Ogre::FrameEvent &evt)
 {
+    ///UPDATES ANIMATIONS AND MOVEMENT OF PLAYER
       playermove = 10 * evt.timeSinceLastFrame;
       Movement();
 

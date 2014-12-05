@@ -2,6 +2,8 @@
 
 Enemy::Enemy(Ogre::String name, Ogre::SceneManager *scenemgr)
 {
+
+    ///CREATE ENEMY
     mscenemgr = scenemgr;
     enemyent = mscenemgr->createEntity((name, "ogrehead.mesh"));
     enemyent->setCastShadows(true);
@@ -9,6 +11,7 @@ Enemy::Enemy(Ogre::String name, Ogre::SceneManager *scenemgr)
     enemynode->attachObject(enemyent);
     enemynode->scale(0.1f, 0.1f, 0.1f);
 
+    ///CREATE WALK COORDINATES -
     mWalkList.push_back(Ogre::Vector3(18.0f,   2.0f,  18.0f ));
     mWalkList.push_back(Ogre::Vector3(9.0f,   2.0f,  9.0f ));
     mWalkList.push_back(Ogre::Vector3(-18.0f,  2.0f, 18.0f));
@@ -28,6 +31,8 @@ Enemy::~Enemy()
 
 }
 bool Enemy::nextLocation(){
+
+    ///SET NEW LOCATION TO WALK TO
     if (mWalkList.empty()) return false;
     mDestination = mWalkList[mListIterator];  // this gets a position from the list
     mDirection = mDestination - enemynode->getPosition();
@@ -38,8 +43,8 @@ bool Enemy::nextLocation(){
 }
 void Enemy::update(const Ogre::FrameEvent &evt)
 {
-
-     movement();
+ ///THIS IS BUGGED - DIDNT HAVE TIME
+     nextLocation();
 
 
     if (mDirection == Ogre::Vector3::ZERO) {
@@ -70,16 +75,17 @@ void Enemy::update(const Ogre::FrameEvent &evt)
 
 void Enemy::movement()
 {
-    nextLocation();
+
 }
 
 Ogre::Entity *Enemy::getEntity()
 {
+    ///RETURN ENTITY FOR COLLISIONS, ETC.
     return enemyent;
 }
 
 Ogre::Vector3 Enemy::getEnemyPosition()
 {
-
+    ///RETURN POSITION
     return enemynode->getPosition();
 }
