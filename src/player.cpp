@@ -53,6 +53,6 @@ void Player::Update(const Ogre::FrameEvent &evt)
       playermove = 10 * evt.timeSinceLastFrame;
       Movement();
 
-        mAnimationState->addTime(evt.timeSinceLastFrame);
+      mAnimationState->addTime(evt.timeSinceLastFrame);
 }
 
