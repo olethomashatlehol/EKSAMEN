@@ -16,9 +16,12 @@ win32 {
     LIBS += -L$(OGRE_HOME)\\boost\\lib
     release:LIBS += -L$(OGRE_HOME)\\lib\\release
     debug:LIBS += -L$(OGRE_HOME)\\lib\\debug
+
+
 }
 
 debug {
+     TARGET = $$join(TARGET,,,d)
     LIBS *= -lOgreMain_d -lOIS_d -lOgreOverlay_d
 }
 release {
@@ -32,3 +35,4 @@ SOURCES += \
 HEADERS += \
     include/EksamensApp.h \
     include/OgreFramework.h
+    include/ExempleApplication.h
