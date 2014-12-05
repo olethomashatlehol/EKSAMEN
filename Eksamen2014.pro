@@ -30,9 +30,15 @@ release {
 
 SOURCES += \
     src/EksamensApp.cpp \
-    src/OgreFramework.cpp
+    src/OgreFramework.cpp \
+    src/player.cpp
+
+
 
 HEADERS += \
     include/EksamensApp.h \
     include/OgreFramework.h \
-    include/ExempleApplication.h
+    include/ExempleApplication.h \
+    include/player.h
+
+

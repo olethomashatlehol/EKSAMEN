@@ -27,20 +27,8 @@ void EksamensApp::createScene(void)
     mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox", 500, false);
  
     // Create the player
-    Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "penguin.mesh");
-    ogreHead->setCastShadows(true);
-    // Create a SceneNode and attach the Entity to it
-    playerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("HeadNode", Ogre::Vector3(-40.0f, 5.0f, 0.0f));
-    playerNode->attachObject(ogreHead);
-    playerNode->scale(0.2f, 0.2f, 0.2f);
-    playerNode->rotate(Ogre::Vector3::UNIT_Y, Ogre::Degree(90));
-    // Set walking animation
-    mAnimationState = ogreHead->getAnimationState("amuse");
-    mAnimationState->setLoop(true);
-    mAnimationState->setEnabled(true);
-
-
     player = new Player("player",mSceneMgr);
+
     // Create the enemy
     Ogre::Entity* mEntEnemy = mSceneMgr->createEntity("Enemy", "ogrehead.mesh");
     mEnemyNode = mSceneMgr->getRootSceneNode()->
@@ -131,22 +119,18 @@ bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
         break;
 
     case OIS::KC_UP:
-        forward = true;
         player->forward = true;
         break;
 
     case OIS::KC_DOWN:
-        backwards = true;
         player->backwards = true;
         break;
 
     case OIS::KC_LEFT:
-        left = true;
         player->left = true;
         break;
 
     case OIS::KC_RIGHT:
-        right = true;
         player->right = true;
         break;
     case OIS::KC_RETURN:
@@ -155,7 +139,7 @@ bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
         {
             mEnemyWalkSpeed = 45;
             mPlayerWalkSpeed = 25;
-            playerNode->setPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
+            player->setPlayerPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
             mSceneMgr->setAmbientLight(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
         }
         break;
@@ -170,22 +154,22 @@ bool EksamensApp::keyReleased(const OIS::KeyEvent &arg)
     switch (arg.key)
     {
     case OIS::KC_UP:
-        forward = false;
+
         player->forward = false;
         break;
 
     case OIS::KC_DOWN:
-        backwards = false;
+
         player->backwards = false;
         break;
 
     case OIS::KC_LEFT:
-        left = false;
+
         player->left = false;
         break;
 
     case OIS::KC_RIGHT:
-        right = false;
+
         player->right = false;
         break;
     default:
@@ -223,10 +207,9 @@ void EksamensApp::createCamera(void)
 bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
 
     //update player
-    Ogre::Real playerMove = mPlayerWalkSpeed * evt.timeSinceLastFrame;
-    mAnimationState->addTime(evt.timeSinceLastFrame);
 
-    player->movement(evt);
+
+    player->Update(evt);
     //update enemy
     if (mDirection == Ogre::Vector3::ZERO) {
         nextLocation();
@@ -253,31 +236,24 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
 
 
     //Move player
-    if (forward)
-        playerNode->translate(0.0, 0.0, -1.0 * playerMove);
-    if (backwards)
-        playerNode->translate(0.0, 0.0, 1.0 * playerMove);
-    if (left)
-        playerNode->translate(-1.0 * playerMove, 0.0, 0.0);
-    if (right)
-        playerNode->translate(1.0 * playerMove, 0.0, 0.0);
+
 
     //update camera
-    mCamera->lookAt(playerNode->getPosition());
+    mCamera->lookAt(player->getPlayerPosition());
 
 
     //Collisions
-
+/*
     //fall down
-    if (playerNode->getPosition().z < -25){
-        playerNode->translate(0.0, -2.0 * playerMove, 0.0);
+    if (player->getPlayerPosition().z < -25){
+        player->playernode->translate(0.0, -2.0 * playerMove, 0.0);
     }
-    if (playerNode->getPosition().z > 25) {
-        playerNode->translate(0.0, -2.0 * playerMove, 0.0);
+    if (player->getPlayerPosition().z > 25) {
+        player->playernode->translate(0.0, -2.0 * playerMove, 0.0);
     }
-    if (playerNode->getPosition().y < -30) {
+    if (player->getPlayerPosition().y < -30) {
         //Could take damage or reset game or something here...
-        playerNode->setPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
+        player->playernode->setPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
     }
 
     //Pickups
@@ -339,9 +315,9 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
         mEnemyWalkSpeed = 0;
     }
 
-    return OgreFramework::frameRenderingQueued(evt);
-}
 
+}
+*/
 
 /*
  *
@@ -349,7 +325,8 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
  *
  *
  */
-
+       return OgreFramework::frameRenderingQueued(evt);
+}
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
