@@ -18,6 +18,7 @@ OgreFramework::OgreFramework(void)
     mKeyboard(0),
 	mOverlaySystem(0)
 {
+    //constructor
 }
 
 //-------------------------------------------------------------------------------------

@@ -45,7 +45,6 @@ protected:
     bool backwards;
     bool left;
     bool right;
-
 };
 
 #endif // #ifndef __EksamensApp_h_

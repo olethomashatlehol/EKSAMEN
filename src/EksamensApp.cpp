@@ -21,10 +21,10 @@ void EksamensApp::createScene(void)
 
 	// Set the scene's ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.4f, 0.4f, 0.4f));
-    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_MODULATIVE);
+    mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
 
-    //Skydome
-    mSceneMgr->setSkyDome(true, "Examples/CloudySky", 5, 8);
+    //Skybox
+    mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox", 500, false);
  
     // Create the player
     Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "penguin.mesh");
@@ -202,11 +202,12 @@ void EksamensApp::createCamera(void)
     // create the camera
     mCamera = mSceneMgr->createCamera("PlayerCam");
     // set its position, direction
-    mCamera->setPosition(Ogre::Vector3(0,10,60));
+    mCamera->setPosition(Ogre::Vector3(0,20,60));
     mCamera->lookAt(Ogre::Vector3(0,6,0));
     // set the near clip distance
     mCamera->setNearClipDistance(5);
 
+    // the rest is set up by default Sdk config
     mCameraMan = new OgreBites::SdkCameraMan(mCamera);   // create a default camera controller
 }
 
@@ -251,6 +252,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
     if (right)
         playerNode->translate(1.0 * playerMove, 0.0, 0.0);
 
+    //update camera
     mCamera->lookAt(playerNode->getPosition());
 
 
@@ -264,7 +266,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
         playerNode->translate(0.0, -2.0 * playerMove, 0.0);
     }
     if (playerNode->getPosition().y < -30) {
-        //take damage...
+        //Could take damage or reset game or something here...
         playerNode->setPosition(Ogre::Vector3(-40.0f, 5.0f, 0.0f));
     }
 
@@ -315,9 +317,6 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
             mPlayerWalkSpeed = 0;
             mEnemyWalkSpeed = 0;
             mPickups = 10; //no reset
-            mWinParticles = mSceneMgr->createParticleSystem("Fireworks", "Examples/Fireworks");
-            mGoalNode->attachObject(mWinParticles);
-            mSceneMgr->setAmbientLight(Ogre::ColourValue(0.9f, 0.9f, 0.0f));
         }
     }
 
@@ -325,7 +324,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
     if(mSceneMgr->getEntity("Head")->
             getWorldBoundingBox().intersects(mSceneMgr->getEntity("Enemy")->getWorldBoundingBox()))
     {
-        mSceneMgr->setAmbientLight(Ogre::ColourValue(0.9f, 0.1f, 0.1f));
+        //mSceneMgr->setAmbientLight(Ogre::ColourValue(0.9f, 0.1f, 0.1f));
         mPlayerWalkSpeed = 0;
         mEnemyWalkSpeed = 0;
     }
