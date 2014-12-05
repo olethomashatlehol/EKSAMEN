@@ -23,15 +23,25 @@ Ogre::Vector3 Player::getPlayerPosition()
     return playernode->getPosition();
 }
 
+void Player::movement(const Ogre::FrameEvent &evt)
+{
+      //Ogre::Real playerMove = 10 * elapsedTime;
 
+    if(forward){
+        playernode->translate(0.0, 0.0, -1.0 * 10);
+    }
+    if(backwards){
+        playernode->translate(0.0, 0.0, 1.0 * 10);
+    }
+    if(left){
+        playernode->translate(-1.0 * 10, 0.0, 0.0);
+        }
+    if(right){
+        playernode->translate(1.0 * 10, 0.0, 0.0);
+}
+}
 /*
-Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "penguin.mesh");
-ogreHead->setCastShadows(true);
-// Create a SceneNode and attach the Entity to it
-playerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("HeadNode", Ogre::Vector3(-40.0f, 5.0f, 0.0f));
-playerNode->attachObject(ogreHead);
-playerNode->scale(0.2f, 0.2f, 0.2f);
-playerNode->rotate(Ogre::Vector3::UNIT_Y, Ogre::Degree(90));
+
 // Set walking animation
 mAnimationState = ogreHead->getAnimationState("amuse");
 mAnimationState->setLoop(true);

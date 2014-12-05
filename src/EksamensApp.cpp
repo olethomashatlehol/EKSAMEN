@@ -132,18 +132,22 @@ bool EksamensApp::keyPressed(const OIS::KeyEvent &arg)
 
     case OIS::KC_UP:
         forward = true;
+        player->forward = true;
         break;
 
     case OIS::KC_DOWN:
         backwards = true;
+        player->backwards = true;
         break;
 
     case OIS::KC_LEFT:
         left = true;
+        player->left = true;
         break;
 
     case OIS::KC_RIGHT:
         right = true;
+        player->right = true;
         break;
     case OIS::KC_RETURN:
         //reset penguin
@@ -167,18 +171,22 @@ bool EksamensApp::keyReleased(const OIS::KeyEvent &arg)
     {
     case OIS::KC_UP:
         forward = false;
+        player->forward = false;
         break;
 
     case OIS::KC_DOWN:
         backwards = false;
+        player->backwards = false;
         break;
 
     case OIS::KC_LEFT:
         left = false;
+        player->left = false;
         break;
 
     case OIS::KC_RIGHT:
         right = false;
+        player->right = false;
         break;
     default:
         OgreFramework::keyReleased(arg);
@@ -218,6 +226,7 @@ bool EksamensApp::frameRenderingQueued(const Ogre::FrameEvent &evt){
     Ogre::Real playerMove = mPlayerWalkSpeed * evt.timeSinceLastFrame;
     mAnimationState->addTime(evt.timeSinceLastFrame);
 
+    player->movement(evt);
     //update enemy
     if (mDirection == Ogre::Vector3::ZERO) {
         nextLocation();
