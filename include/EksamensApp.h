@@ -3,7 +3,7 @@
 
 #include "OgreFramework.h"
 #include "player.h"
-
+#include "enemy.h"
 class EksamensApp : public OgreFramework
 {
 public:
@@ -26,7 +26,7 @@ protected:
     Ogre::Real mEnemyWalkSpeed;
     Ogre::Real mPlayerWalkSpeed;
     Ogre::SceneNode *mEnemyNode;
-    Ogre::SceneNode* playerNode;
+
     Ogre::SceneNode* mGoalNode;
     Ogre::SceneNode* mPickupNode1;
     Ogre::SceneNode* mPickupNode2;
@@ -37,6 +37,7 @@ protected:
 
   //NEW
     Player *player;
+    Enemy *enemy;
 
 
 

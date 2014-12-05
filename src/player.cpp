@@ -4,7 +4,7 @@
 Player::Player(Ogre::String name, Ogre::SceneManager *sceneMgr)
 {
     mscenemgr =sceneMgr;
-    playerent = mscenemgr->createEntity(("name", "penguin.mesh"));
+    playerent = mscenemgr->createEntity((name, "penguin.mesh"));
     playerent->setCastShadows(true);
     playernode = mscenemgr->getRootSceneNode()->createChildSceneNode("playernode",Ogre::Vector3(-40.0f, 5.0f, 0.0f));
     playernode->attachObject(playerent);

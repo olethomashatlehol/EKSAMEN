@@ -19,10 +19,10 @@ public:
     Ogre::AnimationState *mAnimationState;
     Ogre::Real playermove;
 
-    bool backwards;
-    bool forward;
-    bool left;
-    bool right;
+    bool backwards = false;
+    bool forward = false;
+    bool left = false;
+    bool right = false;
 };
 
 #endif // PLAYER_H

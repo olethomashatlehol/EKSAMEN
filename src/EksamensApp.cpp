@@ -30,6 +30,7 @@ void EksamensApp::createScene(void)
     player = new Player("player",mSceneMgr);
 
     // Create the enemy
+    enemy = new Enemy("enemy", mSceneMgr);
     Ogre::Entity* mEntEnemy = mSceneMgr->createEntity("Enemy", "ogrehead.mesh");
     mEnemyNode = mSceneMgr->getRootSceneNode()->
             createChildSceneNode("RobotNode", Ogre::Vector3(0.0f, 2.0f, 0.0f));

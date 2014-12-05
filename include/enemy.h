@@ -15,7 +15,6 @@ public:
     Ogre::SceneNode *enemynode;
     Ogre::Entity *enemyent;
     Ogre::SceneManager *mscenemgr;
-
 };
 
 #endif // ENEMY_H

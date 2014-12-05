@@ -42,6 +42,6 @@ HEADERS += \
     include/OgreFramework.h \
     include/ExempleApplication.h \
     include/player.h \
-    src/enemy.h
+    include/enemy.h
 
 
